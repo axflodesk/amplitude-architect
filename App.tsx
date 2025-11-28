@@ -112,8 +112,7 @@ export default function App() {
                   <img
                     src="https://cdn.prod.website-files.com/64da81538e9bdebe7ae2fa11/64ee6c441b07b9e11db3dc92_A%20mark%20circle.svg"
                     alt="Amplitude"
-                    className="w-12 h-12 inline-block align-middle"
-                    style={{ filter: 'brightness(0.5)' }}
+                    className="w-12 h-12 inline-block align-middle opacity-60"
                   />
                   {' '}events
                 </h2>
