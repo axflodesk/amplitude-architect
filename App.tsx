@@ -109,17 +109,17 @@ export default function App() {
               <div className="text-center space-y-4">
                 <div className="space-y-2">
                   <div className="flex items-center justify-center gap-3">
-                    <span className="text-7xl font-bold tracking-tight text-primary">Ship</span>
+                    <span className="text-5xl font-bold tracking-tight text-primary">Ship</span>
                     <img
                       src="https://cdn.prod.website-files.com/64da81538e9bdebe7ae2fa11/64ee6c441b07b9e11db3dc92_A%20mark%20circle.svg"
                       alt="Amplitude"
-                      className="w-16 h-16"
+                      className="w-12 h-12"
                     />
-                    <span className="text-7xl font-bold tracking-tight text-primary">tracking</span>
+                    <span className="text-5xl font-bold tracking-tight text-primary">tracking</span>
                   </div>
                   <div className="flex items-center justify-center gap-2">
-                    <span className="text-7xl font-bold tracking-tight text-primary">Sip something</span>
-                    <IconCocktail width={80} height={80} className="text-primary" />
+                    <span className="text-5xl font-bold tracking-tight text-primary">Sip something</span>
+                    <IconCocktail width={56} height={56} className="text-primary" />
                   </div>
                 </div>
               </div>
