@@ -92,10 +92,10 @@ export default function App() {
             className="flex items-center gap-3 hover:opacity-70 transition-opacity cursor-pointer"
           >
             <div className="text-primary">
-              <IconActivity width={24} height={24} />
+              <IconActivity width={32} height={32} />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-primary tracking-tight">Instrumentator</h1>
+              <h1 className="text-2xl font-bold text-primary tracking-tight">Instrumentator</h1>
             </div>
           </button>
         </div>
