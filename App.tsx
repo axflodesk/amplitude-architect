@@ -3,7 +3,6 @@ import { IconActivity, IconCocktail } from './components/icons';
 import { InputSection } from './components/InputSection';
 import { EventTable } from './components/EventTable';
 import { ChatInterface } from './components/ChatInterface';
-import { SystemPromptPopover } from './components/SystemPromptPopover';
 import { AmplitudeEvent, ChatMessage, AppState } from './types';
 import { generateEventsFromInput, refineEventsWithChat } from './services/geminiService';
 
@@ -81,7 +80,7 @@ export default function App() {
     <div className="min-h-screen bg-page text-primary font-sans flex flex-col">
       {/* Header */}
       <header className="bg-transparent sticky top-0 z-50 flex-none">
-        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-center relative">
           <button
             onClick={() => {
               setHasGenerated(false);
@@ -99,9 +98,6 @@ export default function App() {
               <h1 className="text-xl font-bold text-primary tracking-tight">Instrumentator</h1>
             </div>
           </button>
-          <div className="flex items-center gap-2">
-            <SystemPromptPopover />
-          </div>
         </div>
       </header>
 
@@ -111,20 +107,21 @@ export default function App() {
           <div className="flex-1 flex flex-col items-center justify-center -mt-20">
             <div className="w-full max-w-2xl space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
               <div className="text-center space-y-4">
-                <h2 className="text-7xl font-bold tracking-tight text-primary">
-                  Tracking specs generator
-                </h2>
-                <p className="text-xl text-primary/70 max-w-xs mx-auto flex items-center justify-center gap-1 flex-wrap">
-                  Relax{' '}
-                  <IconCocktail width={20} height={20} className="text-primary/70" />
-                  {' '}and let AI hallucinate your{' '}
-                  <img
-                    src="https://cdn.prod.website-files.com/64da81538e9bdebe7ae2fa11/64ee69310bb55f013bd361a7_Amplitude%20Logo.svg"
-                    alt="Amplitude"
-                    className="h-6 inline-block align-middle"
-                  />
-                  {' '}events for you.
-                </p>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-center gap-3">
+                    <span className="text-7xl font-bold tracking-tight text-primary">Ship</span>
+                    <img
+                      src="https://cdn.prod.website-files.com/64da81538e9bdebe7ae2fa11/64ee6c441b07b9e11db3dc92_A%20mark%20circle.svg"
+                      alt="Amplitude"
+                      className="w-20 h-20"
+                    />
+                    <span className="text-7xl font-bold tracking-tight text-primary">tracking</span>
+                  </div>
+                  <div className="flex items-center justify-center gap-2">
+                    <span className="text-7xl font-bold tracking-tight text-primary">Sip something</span>
+                    <IconCocktail width={28} height={28} className="text-primary" />
+                  </div>
+                </div>
               </div>
               
               <InputSection 
