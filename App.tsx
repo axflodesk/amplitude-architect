@@ -113,13 +113,13 @@ export default function App() {
                     <img
                       src="https://cdn.prod.website-files.com/64da81538e9bdebe7ae2fa11/64ee6c441b07b9e11db3dc92_A%20mark%20circle.svg"
                       alt="Amplitude"
-                      className="w-20 h-20"
+                      className="w-16 h-16"
                     />
                     <span className="text-7xl font-bold tracking-tight text-primary">tracking</span>
                   </div>
                   <div className="flex items-center justify-center gap-2">
                     <span className="text-7xl font-bold tracking-tight text-primary">Sip something</span>
-                    <IconCocktail width={28} height={28} className="text-primary" />
+                    <IconCocktail width={80} height={80} className="text-primary" />
                   </div>
                 </div>
               </div>
