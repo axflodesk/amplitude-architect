@@ -27,10 +27,29 @@ Analyze the inputs (images and text) to determine the necessary events to track 
     if (isOpen && triggerRef.current && popoverRef.current) {
       const triggerRect = triggerRef.current.getBoundingClientRect();
       const popoverWidth = 640; // w-[640px]
+      const popoverHeight = popoverRef.current.offsetHeight;
+
+      let left = triggerRect.right - popoverWidth;
+      let top = triggerRect.bottom + 8;
+
+      // Ensure popover doesn't go off-screen to the left
+      if (left < 8) {
+        left = 8;
+      }
+
+      // Ensure popover doesn't go off-screen to the right
+      if (left + popoverWidth > window.innerWidth - 8) {
+        left = window.innerWidth - popoverWidth - 8;
+      }
+
+      // Ensure popover doesn't go off-screen at the bottom
+      if (top + popoverHeight > window.innerHeight - 8) {
+        top = triggerRect.top - popoverHeight - 8;
+      }
 
       setPosition({
-        top: triggerRect.bottom + 8,
-        left: triggerRect.right - popoverWidth, // Align right edge with button's right edge
+        top,
+        left,
       });
     }
   }, [isOpen]);
