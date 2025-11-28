@@ -80,7 +80,7 @@ export default function App() {
     <div className="min-h-screen bg-page text-primary font-sans flex flex-col">
       {/* Header */}
       <header className="bg-transparent sticky top-0 z-50 flex-none">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-center relative">
+        <div className="max-w-7xl mx-auto px-4 py-8 flex items-center justify-center relative">
           <button
             onClick={() => {
               setHasGenerated(false);
