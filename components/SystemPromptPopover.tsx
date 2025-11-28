@@ -114,7 +114,7 @@ Analyze the inputs (images and text) to determine the necessary events to track 
           </div>
 
           {/* Code Block */}
-          <div className="rounded-lg p-4 font-mono text-xs leading-relaxed text-gray-300" style={{ backgroundColor: '#000000' }}>
+          <div className="p-4 font-mono text-xs leading-relaxed text-gray-300" style={{ backgroundColor: '#1a1a1a' }}>
             <pre className="whitespace-pre-wrap break-words">{systemPrompt}</pre>
           </div>
         </div>
