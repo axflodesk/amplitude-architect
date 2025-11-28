@@ -16,8 +16,7 @@ const EVENT_SCHEMA = {
       eventName: { type: Type.STRING, description: "The full event name string. If click exists: 'view:page:click:element'. If view-only: 'view:page'" },
       eventProperties: { type: Type.STRING, description: "Detailed properties and their potential values." }
     },
-    required: ["action", "view", "eventName", "eventProperties"],
-    optional: ["click"]
+    required: ["action", "view", "eventName", "eventProperties", "click"]
   }
 };
 
@@ -45,7 +44,7 @@ export const generateEventsFromInput = async (
 ): Promise<AmplitudeEvent[]> => {
   try {
     const parts: any[] = [];
-    
+
     if (imageBase64) {
       // Clean base64 string if it contains the data header
       const cleanBase64 = imageBase64.replace(/^data:image\/(png|jpeg|jpg|webp);base64,/, '');
@@ -78,7 +77,6 @@ export const generateEventsFromInput = async (
         responseSchema: EVENT_SCHEMA,
       }
     });
-
     const text = response.text;
     if (!text) return [];
 
