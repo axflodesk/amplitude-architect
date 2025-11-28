@@ -35,15 +35,42 @@
         height: 8px;
       }
       ::-webkit-scrollbar-track {
-        background: #FAFAFA; 
+        background: #FAFAFA;
       }
       ::-webkit-scrollbar-thumb {
-        background: #CEDFD6; 
+        background: #CEDFD6;
         border-radius: 4px;
         border: 2px solid #FAFAFA;
       }
       ::-webkit-scrollbar-thumb:hover {
-        background: #2B2B2B; 
+        background: #2B2B2B;
+      }
+      /* 8-bit pixel art icon style */
+      .pixel-icon {
+        image-rendering: pixelated;
+        image-rendering: crisp-edges;
+      }
+
+      /* Sharpen SVG stroke rendering */
+      .pixel-icon svg {
+        shape-rendering: crispEdges;
+        stroke-linecap: butt;
+        stroke-linejoin: miter;
+      }
+
+      /* Override lucide-react's default rounded stroke linecap */
+      .pixel-icon svg line,
+      .pixel-icon svg polyline,
+      .pixel-icon svg polygon,
+      .pixel-icon svg path {
+        stroke-linecap: butt !important;
+        stroke-linejoin: miter !important;
+      }
+
+      .pixel-icon-wrapper {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
       }
     </style>
   <script type="importmap">

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Send, Bot, User, Sparkles } from 'lucide-react';
+import { IconSend, IconRobot, IconUser, IconStar } from './icons';
 import { ChatMessage } from '../types';
 import { Button } from './Button';
 
@@ -30,13 +30,13 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ messages, onSendMe
   };
 
   return (
-    <div className="flex flex-col h-full bg-secondary rounded-xl overflow-hidden">
+    <div className="flex flex-col h-full bg-secondary overflow-hidden">
       <div className="p-4 bg-secondary">
         <h3 className="font-semibold text-primary flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-primary" />
-          AI Assistant
+          <IconStar width={20} height={20} />
+          AI assistant
         </h3>
-        <p className="text-xs text-primary/70 mt-1">Chat to refine or add events.</p>
+        <p className="text-xs text-primary/70 mt-1">Chat to refine or add events</p>
       </div>
 
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -52,17 +52,14 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ messages, onSendMe
             key={msg.id}
             className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
           >
-            <div className={`
-              w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0
-              ${msg.role === 'user' ? 'bg-primary text-white' : 'bg-page text-primary'}
-            `}>
-              {msg.role === 'user' ? <User size={14} /> : <Bot size={14} />}
+            <div className="flex-shrink-0 text-primary">
+              {msg.role === 'user' ? <IconUser width={20} height={20} /> : <IconRobot width={20} height={20} />}
             </div>
             <div className={`
-              max-w-[85%] rounded-2xl px-4 py-2.5 text-sm shadow-sm
-              ${msg.role === 'user' 
-                ? 'bg-primary text-white rounded-br-none' 
-                : 'bg-page border border-transparent text-primary rounded-bl-none'}
+              max-w-[85%] px-4 py-2.5 text-sm shadow-sm
+              ${msg.role === 'user'
+                ? 'bg-primary text-white'
+                : 'bg-page border border-transparent text-primary'}
             `}>
               {msg.text}
             </div>
@@ -70,10 +67,10 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ messages, onSendMe
         ))}
         {isProcessing && (
            <div className="flex gap-3 flex-row">
-             <div className="w-8 h-8 rounded-full bg-page text-primary flex items-center justify-center flex-shrink-0">
-               <Bot size={14} />
+             <div className="flex-shrink-0 text-primary">
+               <IconRobot width={20} height={20} />
              </div>
-             <div className="bg-page border border-transparent text-primary rounded-2xl rounded-bl-none px-4 py-3 shadow-sm flex items-center gap-2">
+             <div className="bg-page border border-transparent text-primary px-4 py-3 shadow-sm flex items-center gap-2">
                <span className="w-2 h-2 bg-primary/40 rounded-full animate-bounce"></span>
                <span className="w-2 h-2 bg-primary/40 rounded-full animate-bounce delay-100"></span>
                <span className="w-2 h-2 bg-primary/40 rounded-full animate-bounce delay-200"></span>
@@ -84,17 +81,22 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ messages, onSendMe
       </div>
 
       <div className="p-4 bg-secondary">
-        <form onSubmit={handleSubmit} className="flex gap-2">
+        <form onSubmit={handleSubmit} className="relative flex items-center">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Type your feedback..."
-            className="flex-1 px-4 py-2 border border-primary/10 bg-gray-50 rounded-lg focus:ring-2 focus:ring-primary focus:bg-white outline-none text-sm transition-all placeholder:text-primary/40 text-primary"
+            placeholder="Type your feedback…"
+            className="flex-1 px-4 py-3 pr-14 border border-primary/10 bg-gray-50 focus:ring-2 focus:ring-primary focus:bg-white outline-none text-sm transition-all placeholder:text-primary/40 text-primary"
             disabled={isProcessing}
           />
-          <Button type="submit" size="sm" disabled={!input.trim() || isProcessing}>
-            <Send className="w-4 h-4" />
+          <Button
+            type="submit"
+            size="sm"
+            disabled={!input.trim() || isProcessing}
+            className="absolute right-2"
+          >
+            <IconSend width={16} height={16} />
           </Button>
         </form>
       </div>

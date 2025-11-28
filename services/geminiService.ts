@@ -2,7 +2,7 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { AmplitudeEvent } from "../types";
 
 // Ensure API key is present
-const apiKey = process.env.API_KEY || '';
+const apiKey = process.env.GEMINI_API_KEY || '';
 const ai = new GoogleGenAI({ apiKey });
 
 const EVENT_SCHEMA = {

@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Activity } from 'lucide-react';
+import { IconActivity } from './components/icons';
 import { InputSection } from './components/InputSection';
 import { EventTable } from './components/EventTable';
 import { ChatInterface } from './components/ChatInterface';
+import { SystemPromptPopover } from './components/SystemPromptPopover';
 import { AmplitudeEvent, ChatMessage, AppState } from './types';
 import { generateEventsFromInput, refineEventsWithChat } from './services/geminiService';
 
+// System prompt info integrated via popover
 export default function App() {
   const [events, setEvents] = useState<AmplitudeEvent[]>([]);
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
@@ -80,19 +82,25 @@ export default function App() {
       {/* Header */}
       <header className="bg-transparent sticky top-0 z-50 flex-none">
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-white shadow-lg">
-              <Activity size={24} />
+          <button
+            onClick={() => {
+              setHasGenerated(false);
+              setEvents([]);
+              setChatHistory([]);
+              setInputDescription('');
+              setInputImage(null);
+            }}
+            className="flex items-center gap-3 hover:opacity-70 transition-opacity cursor-pointer"
+          >
+            <div className="text-primary">
+              <IconActivity width={24} height={24} />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-primary tracking-tight">Amplitude Architect</h1>
-              <p className="text-xs text-primary/70 font-medium">AI-Powered Instrumentation</p>
+              <h1 className="text-xl font-bold text-primary tracking-tight">Instrumentator</h1>
             </div>
-          </div>
+          </button>
           <div className="flex items-center gap-2">
-            <span className="px-3 py-1 bg-page text-primary text-xs font-semibold rounded-full border border-primary/10">
-              Gemini 3 Pro
-            </span>
+            <SystemPromptPopover />
           </div>
         </div>
       </header>
@@ -103,13 +111,15 @@ export default function App() {
           <div className="flex-1 flex flex-col items-center justify-center -mt-20">
             <div className="w-full max-w-2xl space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
               <div className="text-center space-y-4">
-                <h2 className="text-6xl font-bold tracking-tight text-primary">
-                  Instrument your product features
+                <h2 className="text-6xl font-bold tracking-tight text-primary flex items-center justify-center gap-3">
+                  <span>Screenshot to</span>
+                  <img
+                    src="https://cdn.prod.website-files.com/64da81538e9bdebe7ae2fa11/64ee69310bb55f013bd361a7_Amplitude%20Logo.svg"
+                    alt="Amplitude"
+                    className="h-12"
+                  />
+                  <span>event specs.</span>
                 </h2>
-                <p className="text-base text-primary/70 max-w-lg mx-auto">
-                  Upload a mockup or describe your new feature. 
-                  AI will instantly generate a comprehensive Amplitude event tracking plan for you.
-                </p>
               </div>
               
               <InputSection 
@@ -148,7 +158,7 @@ export default function App() {
             {/* Right Column: Table */}
             <div className="col-span-12 lg:col-span-8 flex flex-col h-full overflow-hidden">
                <div className="flex-1 min-h-0">
-                  <EventTable events={events} />
+                  <EventTable events={events} isLoading={appState === AppState.GENERATING || appState === AppState.REFINING} />
                </div>
             </div>
           </div>
