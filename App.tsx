@@ -107,7 +107,7 @@ export default function App() {
           <div className="flex-1 flex flex-col items-center justify-center -mt-20">
             <div className="w-full max-w-lg space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
               <div className="text-center space-y-4">
-                <h2 className="text-5xl font-bold tracking-tight text-primary">
+                <h2 className="text-5xl font-bold tracking-tight text-primary/70">
                   Image recognition finds your{' '}
                   <img
                     src="https://cdn.prod.website-files.com/64da81538e9bdebe7ae2fa11/64ee6c441b07b9e11db3dc92_A%20mark%20circle.svg"
