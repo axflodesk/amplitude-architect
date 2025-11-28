@@ -1,0 +1,5 @@
+{
+  "name": "Amplitude Architect",
+  "description": "Intelligent Amplitude event instrumentation generator using Gemini. Upload feature mockups or descriptions to automatically generate exportable event tracking specs.",
+  "requestFramePermissions": []
+}
