@@ -12,11 +12,12 @@ const EVENT_SCHEMA = {
     properties: {
       action: { type: Type.STRING, description: "Descriptive human-readable action (e.g., 'Click on plan card CTA')" },
       view: { type: Type.STRING, description: "The view/page identifier (e.g., 'view:pricing')" },
-      click: { type: Type.STRING, description: "The click identifier (e.g., 'click:plan-card-CTA')" },
-      eventName: { type: Type.STRING, description: "The full event name string (e.g., 'view:pricing:click:plan-card-CTA')" },
+      click: { type: Type.STRING, description: "The click identifier (e.g., 'click:plan-card-CTA') or empty string if view-only event" },
+      eventName: { type: Type.STRING, description: "The full event name string. If click exists: 'view:page:click:element'. If view-only: 'view:page'" },
       eventProperties: { type: Type.STRING, description: "Detailed properties and their potential values." }
     },
-    required: ["action", "view", "click", "eventName", "eventProperties"]
+    required: ["action", "view", "eventName", "eventProperties"],
+    optional: ["click"]
   }
 };
 
@@ -26,10 +27,14 @@ Your goal is to generate precise, consistent, and useful tracking events for sof
 
 Format Guidelines:
 - **Action**: Human readable description of the user action.
-- **View**: 'view:<page_name>'
-- **Click**: 'click:<element_name>' (if applicable) or other action verb.
-- **Event name**: combined scope usually 'view:<page>:click:<element>'
+- **View**: 'view:<page_name>' (required for all events)
+- **Click**: 'click:<element_name>' ONLY if there's a specific clickable element. Leave EMPTY ("") for view-only events.
+- **Event name**:
+  - If there's a click: 'view:<page>:click:<element>'
+  - If view-only (no click): 'view:<page>'
 - **Event properties**: List key-value pairs or property descriptions clearly. E.g., "Plan: [Free, Pro], Source: [Header, Footer]"
+
+Important: Some events are purely view events (page loads, navigation) and should NOT have a click. In those cases, leave the click field empty and use only the view name as the event name.
 
 Analyze the inputs (images and text) to determine the necessary events to track user interaction fully.
 `;

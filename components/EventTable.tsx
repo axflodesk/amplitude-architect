@@ -62,7 +62,7 @@ export const EventTable: React.FC<EventTableProps> = ({ events, isLoading = fals
   }
 
   return (
-    <div className="bg-secondary flex flex-col h-full overflow-hidden">
+    <div className="bg-secondary flex flex-col h-full overflow-hidden border-2 border-primary/80">
       <div className="p-4 flex justify-between items-center bg-secondary">
         <h3 className="font-semibold text-primary flex items-center gap-2">
           <IconTable width={20} height={20} className="text-primary" />
@@ -119,11 +119,11 @@ export const EventTable: React.FC<EventTableProps> = ({ events, isLoading = fals
               // Actual event rows
               events.map((event, idx) => (
                 <tr key={event.id || idx} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4 text-primary font-medium whitespace-normal">{event.action}</td>
-                  <td className="px-6 py-4 text-primary/80 font-mono text-xs">{event.view}</td>
-                  <td className="px-6 py-4 text-primary/80 font-mono text-xs">{event.click}</td>
-                  <td className="px-6 py-4 text-primary font-mono text-xs font-bold">{event.eventName}</td>
-                  <td className="px-6 py-4 text-primary/80 whitespace-pre-wrap">{event.eventProperties}</td>
+                  <td className="px-6 py-4 text-primary font-medium whitespace-normal">{event.action || ''}</td>
+                  <td className="px-6 py-4 text-primary/80 font-mono text-xs">{event.view || ''}</td>
+                  <td className="px-6 py-4 text-primary/80 font-mono text-xs">{event.click || ''}</td>
+                  <td className="px-6 py-4 text-primary font-mono text-xs font-bold">{event.eventName || ''}</td>
+                  <td className="px-6 py-4 text-primary/80 whitespace-pre-wrap">{event.eventProperties || ''}</td>
                 </tr>
               ))
             )}

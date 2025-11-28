@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { IconSend, IconRobot, IconUser, IconStar } from './icons';
+import { IconCoffee, IconCoffee1, IconCoffee2, IconCoffee3, IconRobot, IconUser, IconStar } from './icons';
 import { ChatMessage } from '../types';
 import { Button } from './Button';
 
@@ -11,6 +11,7 @@ interface ChatInterfaceProps {
 
 export const ChatInterface: React.FC<ChatInterfaceProps> = ({ messages, onSendMessage, isProcessing }) => {
   const [input, setInput] = useState('');
+  const [coffeeFrame, setCoffeeFrame] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -21,6 +22,16 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ messages, onSendMe
     scrollToBottom();
   }, [messages]);
 
+  useEffect(() => {
+    if (!isProcessing) return;
+
+    const interval = setInterval(() => {
+      setCoffeeFrame(prev => (prev + 1) % 3);
+    }, 300);
+
+    return () => clearInterval(interval);
+  }, [isProcessing]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (input.trim() && !isProcessing) {
@@ -30,7 +41,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ messages, onSendMe
   };
 
   return (
-    <div className="flex flex-col h-full bg-secondary overflow-hidden">
+    <div className="flex flex-col h-full bg-secondary overflow-hidden border-2 border-primary/80">
       <div className="p-4 bg-secondary">
         <h3 className="font-semibold text-primary flex items-center gap-2">
           <IconStar width={20} height={20} />
@@ -71,9 +82,9 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ messages, onSendMe
                <IconRobot width={20} height={20} />
              </div>
              <div className="bg-page border border-transparent text-primary px-4 py-3 shadow-sm flex items-center gap-2">
-               <span className="w-2 h-2 bg-primary/40 rounded-full animate-bounce"></span>
-               <span className="w-2 h-2 bg-primary/40 rounded-full animate-bounce delay-100"></span>
-               <span className="w-2 h-2 bg-primary/40 rounded-full animate-bounce delay-200"></span>
+               {coffeeFrame === 0 && <IconCoffee3 width={20} height={20} />}
+               {coffeeFrame === 1 && <IconCoffee2 width={20} height={20} />}
+               {coffeeFrame === 2 && <IconCoffee1 width={20} height={20} />}
              </div>
            </div>
         )}
@@ -96,7 +107,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ messages, onSendMe
             disabled={!input.trim() || isProcessing}
             className="absolute right-2"
           >
-            <IconSend width={16} height={16} />
+            <IconCoffee width={16} height={16} />
           </Button>
         </form>
       </div>

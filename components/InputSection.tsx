@@ -52,9 +52,9 @@ export const InputSection: React.FC<InputSectionProps> = ({
 
   return (
     <>
-      <div className="bg-secondary p-6 space-y-4">
+      <div className="bg-secondary p-6 space-y-4 border-2 border-primary/80">
         <div className="space-y-2">
-          <label className="block text-sm font-semibold text-primary">Feature snapshot (optional)</label>
+          <label className="block text-sm font-semibold text-primary">Feature snapshot</label>
           <div
             onClick={() => !imagePreview && fileInputRef.current?.click()}
             className={`

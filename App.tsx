@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { IconActivity } from './components/icons';
+import { IconActivity, IconCocktail } from './components/icons';
 import { InputSection } from './components/InputSection';
 import { EventTable } from './components/EventTable';
 import { ChatInterface } from './components/ChatInterface';
@@ -111,15 +111,20 @@ export default function App() {
           <div className="flex-1 flex flex-col items-center justify-center -mt-20">
             <div className="w-full max-w-2xl space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
               <div className="text-center space-y-4">
-                <h2 className="text-6xl font-bold tracking-tight text-primary flex items-center justify-center gap-3">
-                  <span>Screenshot to</span>
+                <h2 className="text-7xl font-bold tracking-tight text-primary">
+                  Tracking specs generator
+                </h2>
+                <p className="text-xl text-primary/70 max-w-xs mx-auto flex items-center justify-center gap-1 flex-wrap">
+                  Relax{' '}
+                  <IconCocktail width={20} height={20} className="text-primary/70" />
+                  {' '}and let AI hallucinate your{' '}
                   <img
                     src="https://cdn.prod.website-files.com/64da81538e9bdebe7ae2fa11/64ee69310bb55f013bd361a7_Amplitude%20Logo.svg"
                     alt="Amplitude"
-                    className="h-12"
+                    className="h-6 inline-block align-middle"
                   />
-                  <span>event specs.</span>
-                </h2>
+                  {' '}events for you.
+                </p>
               </div>
               
               <InputSection 

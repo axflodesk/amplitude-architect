@@ -90,3 +90,38 @@ export const IconCheck: React.FC<IconProps> = ({ width = 24, height = 24, classN
     <path d="M18 6h2v2h-2V6zm-2 4V8h2v2h-2zm-2 2v-2h2v2h-2zm-2 2h2v-2h-2v2zm-2 2h2v-2h-2v2zm-2 0v2h2v-2H8zm-2-2h2v2H6v-2zm0 0H4v-2h2v2z" fill="currentColor"/>
   </svg>
 );
+
+// Cocktail icon (8-bit pixel style)
+export const IconCocktail: React.FC<IconProps> = ({ width = 24, height = 24, className, style }) => (
+  <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={width} height={height} className={className} style={style}>
+    <path d="M19 3H3v4h2v2h2v2h2v2h2v6H7v2h10v-2h-4v-6h2v-2h2V9h2V7h2V3h-2zm0 4H5V5h14v2z" fill="currentColor"/>
+  </svg>
+);
+
+// Coffee icon (8-bit pixel style)
+export const IconCoffee: React.FC<IconProps> = ({ width = 24, height = 24, className, style }) => (
+  <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={width} height={height} className={className} style={style}>
+    <path d="M7 3H5v4h2V3zm4 0H9v4h2V3zm2 0h2v4h-2V3zm8 6H3v12h14v-5h4V9zm-2 5h-2v-3h2v3zM5 11h10v8H5v-8z" fill="currentColor"/>
+  </svg>
+);
+
+// Coffee cup loading animation icon 1
+export const IconCoffee1: React.FC<IconProps> = ({ width = 24, height = 24, className, style }) => (
+  <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={width} height={height} className={className} style={style}>
+    <path d="M13 2h-2v2H9v4H7v4H5v6h2v2h2v2h6v-2h2v-2h2v-6h-2V8h-2V4h-2V2zm0 2v4h2v4h2v6h-2v2H9v-2H7v-6h2V8h2V4h2z" fill="currentColor"/>
+  </svg>
+);
+
+// Coffee cup loading animation icon 2
+export const IconCoffee2: React.FC<IconProps> = ({ width = 24, height = 24, className, style }) => (
+  <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={width} height={height} className={className} style={style}>
+    <path d="M13 2h-2v2H9v4H7v4H5v6h2v2h2v2h6v-2h2v-2h2v-6h-2V8h-2V4h-2V2zm0 2v4h2v4h2v3H7v-3h2V8h2V4h2z" fill="currentColor"/>
+  </svg>
+);
+
+// Coffee cup loading animation icon 3
+export const IconCoffee3: React.FC<IconProps> = ({ width = 24, height = 24, className, style }) => (
+  <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={width} height={height} className={className} style={style}>
+    <path d="M11 2h2v2h2v4h2v4h2v6h-2v2h-2v2H9v-2H7v-2H5v-6h2V8h2V4h2V2z" fill="currentColor"/>
+  </svg>
+);
