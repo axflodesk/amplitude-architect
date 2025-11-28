@@ -105,7 +105,7 @@ export default function App() {
       <main className="flex-1 max-w-7xl mx-auto px-4 py-8 w-full flex flex-col">
         {!hasGenerated ? (
           <div className="flex-1 flex flex-col items-center justify-center -mt-20">
-            <div className="w-full max-w-2xl space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div className="w-full max-w-lg space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
               <div className="text-center space-y-4">
                 <h2 className="text-5xl font-bold tracking-tight text-primary">
                   Image recognition finds your{' '}
