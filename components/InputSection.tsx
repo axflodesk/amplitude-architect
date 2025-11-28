@@ -107,7 +107,7 @@ export const InputSection: React.FC<InputSectionProps> = ({
           />
         </div>
 
-        <div className="space-y-2">
+        <div className="grid grid-cols-2 gap-6">
           <div className="flex items-center gap-3">
             <label className="text-sm font-semibold text-primary">Model:</label>
             <div
