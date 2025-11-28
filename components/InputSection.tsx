@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
-import { IconUpload, IconX, IconWand } from './icons';
+import { IconUpload, IconX, IconWand, IconDocument } from './icons';
 import { Button } from './Button';
+import { SystemPromptPopover } from './SystemPromptPopover';
 
 interface InputSectionProps {
   description: string;
@@ -104,6 +105,27 @@ export const InputSection: React.FC<InputSectionProps> = ({
             placeholder="Describe the feature, user flow, or specific interactions you want to track..."
             className="w-full px-4 py-3 border border-primary/10 bg-gray-50 focus:ring-2 focus:ring-primary focus:bg-white outline-none min-h-[120px] resize-none text-sm placeholder:text-primary/40 text-primary transition-colors"
           />
+        </div>
+
+        <div className="space-y-2">
+          <div className="flex items-center gap-3">
+            <label className="text-sm font-semibold text-primary">Model:</label>
+            <div
+              className="px-3 py-1 text-xs font-semibold rounded-full"
+              style={{
+                backgroundColor: '#2B2B2B',
+                color: '#f5f5f5',
+              }}
+            >
+              Gemini 3 Pro
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <label className="text-sm font-semibold text-primary">System prompt:</label>
+            <SystemPromptPopover>
+              <IconDocument width={16} height={16} style={{ color: 'currentColor' }} />
+            </SystemPromptPopover>
+          </div>
         </div>
 
         <Button

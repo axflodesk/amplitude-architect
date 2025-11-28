@@ -125,3 +125,10 @@ export const IconCoffee3: React.FC<IconProps> = ({ width = 24, height = 24, clas
     <path d="M11 2h2v2h2v4h2v4h2v6h-2v2h-2v2H9v-2H7v-2H5v-6h2V8h2V4h2V2z" fill="currentColor"/>
   </svg>
 );
+
+// Document icon (8-bit pixel style)
+export const IconDocument: React.FC<IconProps> = ({ width = 24, height = 24, className, style }) => (
+  <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={width} height={height} className={className} style={style}>
+    <path d="M21 22H3V2h12v2h2v2h2v2h2v14zM17 6h-2v2h2V6zM5 4v16h14V10h-6V4H5zm8 12H7v2h6v-2zm-6-4h10v2H7v-2zm4-4H7v2h4V8z" fill="currentColor"/>
+  </svg>
+);

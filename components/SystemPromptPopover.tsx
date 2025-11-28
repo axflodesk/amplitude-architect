@@ -1,7 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, ReactNode } from 'react';
 import { IconX } from './icons';
 
-export const SystemPromptPopover: React.FC = () => {
+interface SystemPromptPopoverProps {
+  children?: ReactNode;
+}
+
+export const SystemPromptPopover: React.FC<SystemPromptPopoverProps> = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [position, setPosition] = useState({ top: 0, left: 0 });
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -58,13 +62,13 @@ Analyze the inputs (images and text) to determine the necessary events to track 
       <button
         ref={triggerRef}
         onClick={() => setIsOpen(!isOpen)}
-        className="px-3 py-1 text-xs font-semibold rounded-full transition-colors cursor-pointer"
-        style={{
+        className={children ? "hover:opacity-70 transition-opacity cursor-pointer" : "px-3 py-1 text-xs font-semibold rounded-full transition-colors cursor-pointer"}
+        style={children ? {} : {
           backgroundColor: '#2B2B2B',
           color: '#f5f5f5',
         }}
       >
-        Gemini 3 Pro
+        {children || "Gemini 3 Pro"}
       </button>
 
       {isOpen && (
