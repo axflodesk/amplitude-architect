@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from "@google/genai";
+import { GoogleGenerativeAI } from "npm:@google/genai";
 import { AmplitudeEvent } from "./types.ts";
 
 export class GeminiClient {
