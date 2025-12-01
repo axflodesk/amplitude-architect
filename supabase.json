@@ -1,0 +1,10 @@
+{
+  "functions": {
+    "generateEvents": {
+      "verify_jwt": false
+    },
+    "refineEvents": {
+      "verify_jwt": false
+    }
+  }
+}

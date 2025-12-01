@@ -11,6 +11,23 @@ interface EventTableProps {
 export const EventTable: React.FC<EventTableProps> = ({ events, isLoading = false }) => {
   const [copied, setCopied] = useState(false);
 
+  const formatEventProperties = (eventProperties: string): string => {
+    if (!eventProperties || eventProperties.trim() === '') {
+      return '';
+    }
+    try {
+      const parsed = JSON.parse(eventProperties);
+      if (Object.keys(parsed).length === 0) {
+        return '';
+      }
+      return Object.entries(parsed)
+        .map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(', ') : value}`)
+        .join('\n');
+    } catch {
+      return eventProperties;
+    }
+  };
+
   const generateCSV = () => {
     const headers = ["Action", "View", "Click", "Event Name", "Event Properties"];
     const rows = events.map(e => [
@@ -18,7 +35,7 @@ export const EventTable: React.FC<EventTableProps> = ({ events, isLoading = fals
       `"${e.view.replace(/"/g, '""')}"`,
       `"${e.click.replace(/"/g, '""')}"`,
       `"${e.eventName.replace(/"/g, '""')}"`,
-      `"${e.eventProperties.replace(/"/g, '""')}"`
+      `"${formatEventProperties(e.eventProperties).replace(/"/g, '""')}"`
     ]);
 
     return [
@@ -123,7 +140,7 @@ export const EventTable: React.FC<EventTableProps> = ({ events, isLoading = fals
                   <td className="px-6 py-4 text-primary/80 font-mono text-xs">{event.view || ''}</td>
                   <td className="px-6 py-4 text-primary/80 font-mono text-xs">{event.click || ''}</td>
                   <td className="px-6 py-4 text-primary font-mono text-xs font-bold">{event.eventName || ''}</td>
-                  <td className="px-6 py-4 text-primary/80 whitespace-pre-wrap">{event.eventProperties || ''}</td>
+                  <td className="px-6 py-4 text-primary/80 whitespace-pre-wrap text-xs">{formatEventProperties(event.eventProperties)}</td>
                 </tr>
               ))
             )}
