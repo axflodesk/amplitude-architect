@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { IconActivity, IconCocktail } from './components/icons';
+import React, { useState, useRef } from 'react';
+import { IconActivity } from './components/icons';
 import { InputSection } from './components/InputSection';
 import { EventTable } from './components/EventTable';
 import { ChatInterface } from './components/ChatInterface';
@@ -16,31 +16,65 @@ export default function App() {
   // Lifted state for input persistence
   const [inputDescription, setInputDescription] = useState('');
   const [inputImage, setInputImage] = useState<string | null>(null);
+  const [abortController, setAbortController] = useState<AbortController | null>(null);
+  const wasStoppedByUserRef = useRef(false);
 
   const handleGenerate = async () => {
     if (!inputDescription.trim() && !inputImage) return;
 
+    // Reset stop flag for new request
+    wasStoppedByUserRef.current = false;
+
     setHasGenerated(true);
     setAppState(AppState.GENERATING);
+
+    // Create user message with image and description
+    const userMessage: ChatMessage = {
+      id: crypto.randomUUID(),
+      role: 'user',
+      text: inputDescription || 'Generate events for this feature',
+      imageData: inputImage || undefined,
+      timestamp: Date.now()
+    };
+    setChatHistory([userMessage]);
+
     try {
       const generatedEvents = await generateEventsFromInput(inputDescription, inputImage || undefined);
+
+      // Don't process response if user stopped it
+      if (wasStoppedByUserRef.current) {
+        return;
+      }
+
       setEvents(generatedEvents);
-      // Clear chat history on new generation
-      setChatHistory([{
+
+      // Add assistant response
+      const botMessage: ChatMessage = {
         id: crypto.randomUUID(),
         role: 'model',
         text: `I've analyzed your input and generated ${generatedEvents.length} events. Review the table below. You can chat with me to refine them.`,
         timestamp: Date.now()
-      }]);
+      };
+      setChatHistory(prev => [...prev, botMessage]);
     } catch (error) {
       console.error(error);
+
+      // Don't show error message if user stopped it
+      if (wasStoppedByUserRef.current) {
+        return;
+      }
+
       alert("Failed to generate events. Please check your API key and try again.");
     } finally {
       setAppState(AppState.IDLE);
+      setAbortController(null);
     }
   };
 
   const handleChat = async (message: string) => {
+    // Reset stop flag for new request
+    wasStoppedByUserRef.current = false;
+
     // Optimistic user update
     const userMsg: ChatMessage = {
       id: crypto.randomUUID(),
@@ -51,10 +85,19 @@ export default function App() {
     setChatHistory(prev => [...prev, userMsg]);
     setAppState(AppState.REFINING);
 
+    const controller = new AbortController();
+    setAbortController(controller);
+
     try {
       const { events: updatedEvents, message: botText } = await refineEventsWithChat(events, message);
+
+      // Don't process response if user stopped it
+      if (wasStoppedByUserRef.current) {
+        return;
+      }
+
       setEvents(updatedEvents);
-      
+
       const botMsg: ChatMessage = {
         id: crypto.randomUUID(),
         role: 'model',
@@ -64,6 +107,12 @@ export default function App() {
       setChatHistory(prev => [...prev, botMsg]);
     } catch (error) {
       console.error(error);
+
+      // Don't show error message if user stopped it
+      if (wasStoppedByUserRef.current) {
+        return;
+      }
+
       const errorMsg: ChatMessage = {
         id: crypto.randomUUID(),
         role: 'model',
@@ -73,7 +122,22 @@ export default function App() {
       setChatHistory(prev => [...prev, errorMsg]);
     } finally {
       setAppState(AppState.IDLE);
+      setAbortController(null);
     }
+  };
+
+  const handleStopProcessing = () => {
+    wasStoppedByUserRef.current = true;
+    setAppState(AppState.IDLE);
+    setAbortController(null);
+
+    const stoppedMsg: ChatMessage = {
+      id: crypto.randomUUID(),
+      role: 'model',
+      text: "Processing stopped by user.",
+      timestamp: Date.now()
+    };
+    setChatHistory(prev => [...prev, stoppedMsg]);
   };
 
   return (
@@ -130,31 +194,20 @@ export default function App() {
           </div>
         ) : (
           <div className="grid grid-cols-12 gap-6 h-[calc(100vh-8rem)] animate-in fade-in duration-500">
-            {/* Left Column: Input & Chat */}
-            <div className="col-span-12 lg:col-span-4 flex flex-col gap-6 h-full overflow-hidden">
-              <div className="flex-none">
-                <InputSection 
-                  description={inputDescription}
-                  setDescription={setInputDescription}
-                  imagePreview={inputImage}
-                  setImagePreview={setInputImage}
-                  onGenerate={handleGenerate} 
-                  isGenerating={appState === AppState.GENERATING} 
-                />
-              </div>
-              <div className="flex-1 min-h-0">
-                 <ChatInterface 
-                   messages={chatHistory} 
-                   onSendMessage={handleChat}
-                   isProcessing={appState === AppState.REFINING}
-                 />
-              </div>
+            {/* Left Column: Unified Chat Assistant */}
+            <div className="col-span-12 lg:col-span-4 flex flex-col h-full overflow-hidden">
+              <ChatInterface
+                messages={chatHistory}
+                onSendMessage={handleChat}
+                isProcessing={appState === AppState.GENERATING || appState === AppState.REFINING}
+                onStopProcessing={handleStopProcessing}
+              />
             </div>
 
             {/* Right Column: Table */}
             <div className="col-span-12 lg:col-span-8 flex flex-col h-full overflow-hidden">
                <div className="flex-1 min-h-0">
-                  <EventTable events={events} isLoading={appState === AppState.GENERATING || appState === AppState.REFINING} />
+                  <EventTable events={events} isLoading={appState === AppState.GENERATING} />
                </div>
             </div>
           </div>

@@ -12,6 +12,7 @@ export interface ChatMessage {
   role: 'user' | 'model';
   text: string;
   timestamp: number;
+  imageData?: string;
 }
 
 export enum AppState {
