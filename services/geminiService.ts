@@ -1,95 +1,29 @@
-import { GoogleGenAI, Type } from "@google/genai";
+import { supabase } from "../lib/supabaseClient";
 import { AmplitudeEvent } from "../types";
-
-// Ensure API key is present
-const apiKey = process.env.GEMINI_API_KEY || '';
-const ai = new GoogleGenAI({ apiKey });
-
-const EVENT_SCHEMA = {
-  type: Type.ARRAY,
-  items: {
-    type: Type.OBJECT,
-    properties: {
-      action: { type: Type.STRING, description: "Descriptive human-readable action (e.g., 'Click on plan card CTA')" },
-      view: { type: Type.STRING, description: "The view/page identifier (e.g., 'view:pricing')" },
-      click: { type: Type.STRING, description: "The click identifier (e.g., 'click:plan-card-CTA') or empty string if view-only event" },
-      eventName: { type: Type.STRING, description: "The full event name string. If click exists: 'view:page:click:element'. If view-only: 'view:page'" },
-      eventProperties: { type: Type.STRING, description: "Detailed properties and their potential values." }
-    },
-    required: ["action", "view", "eventName", "eventProperties", "click"]
-  }
-};
-
-const SYSTEM_INSTRUCTION = `
-You are an expert Product Manager and Data Analyst specializing in Amplitude instrumentation.
-Your goal is to generate precise, consistent, and useful tracking events for software applications.
-
-Format Guidelines:
-- **Action**: Human readable description of the user action.
-- **View**: 'view:<page_name>' (required for all events)
-- **Click**: 'click:<element_name>' ONLY if there's a specific clickable element. Leave EMPTY ("") for view-only events.
-- **Event name**:
-  - If there's a click: 'view:<page>:click:<element>'
-  - If view-only (no click): 'view:<page>'
-- **Event properties**: List key-value pairs or property descriptions clearly. E.g., "Plan: [Free, Pro], Source: [Header, Footer]"
-
-Important: Some events are purely view events (page loads, navigation) and should NOT have a click. In those cases, leave the click field empty and use only the view name as the event name.
-
-Analyze the inputs (images and text) to determine the necessary events to track user interaction fully.
-`;
 
 export const generateEventsFromInput = async (
   description: string,
   imageBase64?: string
 ): Promise<AmplitudeEvent[]> => {
   try {
-    const parts: any[] = [];
-
-    if (imageBase64) {
-      // Clean base64 string if it contains the data header
-      const cleanBase64 = imageBase64.replace(/^data:image\/(png|jpeg|jpg|webp);base64,/, '');
-      parts.push({
-        inlineData: {
-          data: cleanBase64,
-          mimeType: 'image/png' // Assuming png for simplicity, API handles standard types
-        }
-      });
-    }
-
-    if (description) {
-      parts.push({
-        text: `Feature Description: ${description}\n\nPlease generate a list of Amplitude events for this feature.`
-      });
-    } else if (parts.length > 0) {
-      parts.push({
-        text: "Generate a list of Amplitude events based on this UI screenshot."
-      });
-    } else {
-        throw new Error("No input provided");
-    }
-
-    const response = await ai.models.generateContent({
-      model: 'gemini-3-pro-preview', // Capable of reasoning and vision
-      contents: { parts },
-      config: {
-        systemInstruction: SYSTEM_INSTRUCTION,
-        responseMimeType: "application/json",
-        responseSchema: EVENT_SCHEMA,
+    const { data, error } = await supabase.functions.invoke('generateEvents', {
+      body: {
+        description,
+        imageBase64: imageBase64 ? imageBase64.replace(/^data:image\/(png|jpeg|jpg|webp);base64,/, '') : undefined
       }
     });
-    const text = response.text;
-    if (!text) return [];
 
-    const rawEvents = JSON.parse(text);
-    
-    // Add IDs for React keys
-    return rawEvents.map((e: any) => ({
-      ...e,
-      id: crypto.randomUUID()
-    }));
+    if (error) {
+      throw new Error(error.message || 'Failed to generate events');
+    }
 
+    if (!data || !data.events) {
+      throw new Error('Invalid response from generateEvents function');
+    }
+
+    return data.events;
   } catch (error) {
-    console.error("Gemini Generation Error:", error);
+    console.error("Event Generation Error:", error);
     throw error;
   }
 };
@@ -99,44 +33,27 @@ export const refineEventsWithChat = async (
   userInstruction: string
 ): Promise<{ events: AmplitudeEvent[], message: string }> => {
   try {
-    const prompt = `
-    Current Event Instrumentation List (JSON):
-    ${JSON.stringify(currentEvents.map(({id, ...rest}) => rest), null, 2)}
-
-    User Request: "${userInstruction}"
-
-    Instructions:
-    1. Update the event list based on the user's request. 
-    2. Add, remove, or modify events as needed.
-    3. Return the NEW full list of events in JSON format.
-    `;
-
-    const response = await ai.models.generateContent({
-      model: 'gemini-3-pro-preview',
-      contents: prompt,
-      config: {
-        systemInstruction: SYSTEM_INSTRUCTION,
-        responseMimeType: "application/json",
-        responseSchema: EVENT_SCHEMA,
+    const { data, error } = await supabase.functions.invoke('refineEvents', {
+      body: {
+        events: currentEvents.map(({ id, ...rest }) => rest),
+        instruction: userInstruction
       }
     });
 
-     const text = response.text;
-    if (!text) throw new Error("No response from AI");
+    if (error) {
+      throw new Error(error.message || 'Failed to refine events');
+    }
 
-    const rawEvents = JSON.parse(text);
-    const newEvents = rawEvents.map((e: any) => ({
-      ...e,
-      id: crypto.randomUUID()
-    }));
+    if (!data || !data.events) {
+      throw new Error('Invalid response from refineEvents function');
+    }
 
     return {
-        events: newEvents,
-        message: "I've updated the event list based on your feedback."
+      events: data.events,
+      message: data.message || "I've updated the event list based on your feedback."
     };
-
   } catch (error) {
-    console.error("Gemini Refinement Error:", error);
+    console.error("Event Refinement Error:", error);
     throw error;
   }
 };
