@@ -87,26 +87,32 @@ serve(async (req) => {
       required: ["events"]
     };
 
-    const SYSTEM_INSTRUCTION = `You are an Amplitude event tracking expert. Your task is to analyze product features and generate precise Amplitude event tracking specifications.
+    const SYSTEM_INSTRUCTION = `You are an Amplitude event tracking expert. Your task is to analyze product features and generate precise Amplitude event tracking specifications. CONSOLIDATE similar events using properties rather than creating separate events for each variation.
 
 Generate tracking events that:
 1. view: page identifier using lowercase with hyphens (e.g., "home", "pricing", "checkout")
-2. click: click element identifier using lowercase with hyphens, or empty string "" for view-only events (e.g., "submit-button", "sign-up-cta", "footer-help")
+2. click: click element identifier using lowercase with hyphens, or empty string "" for view-only events
+   - Use GENERIC names that describe the element TYPE, not its specific content
+   - Example: Use "email-template" instead of creating separate events like "live-social-audit", "fresh-episode", "new-lotion"
+   - The specific content/values should go in eventProperties instead
 3. eventName: FULL event name combining view and click:
-   - For clicks: "view:<page>:click:<element>" (e.g., "view:pricing:click:submit-button", "view:home:click:footer-help")
+   - For clicks: "view:<page>:click:<element>" (e.g., "view:email:click:email-template", "view:pricing:click:submit-button")
    - For view-only: "view:<page>" (e.g., "view:pricing")
-4. action: Human-readable description (e.g., "Click on submit button on pricing page")
-5. eventProperties: JSON string of relevant context-based properties with possible values
-   - Generate ONLY if there are meaningful properties to track based on the feature context
-   - For empty properties, use empty string ""
-   - Examples: "{\\"plan-type\\": [\\"free\\", \\"pro\\", \\"enterprise\\"]}" or "{\\"cta-location\\": [\\"header\\", \\"footer\\"]}"
-   - Return empty string "" if no relevant properties exist
+4. action: Human-readable description (e.g., "Click on email template option", "Click on submit button on pricing page")
+5. eventProperties: JSON string capturing variations and context
+   - CONSOLIDATE similar items into a single event and capture variations as properties
+   - Example: If there are 3 email templates, use ONE event with: "{\\"template-name\\": [\\"Live Social Media Audit\\", \\"Fresh Episode\\", \\"New Lotion\\"]}"
+   - Return empty string "" if no meaningful variations exist
 
-IMPORTANT NAMING RULES:
+IMPORTANT RULES:
 - Use lowercase letters and hyphens ONLY (no underscores or spaces)
-- Examples: "submit-button", "sign-up-cta", "footer-help", "pricing-page", "checkout"
-- eventName must ALWAYS follow format: "view:<page>:click:<element>" for clicks or "view:<page>" for view-only
-- eventProperties keys and values must use lowercase with hyphens (e.g., "plan-type", "cta-location")
+- Do NOT create separate events for content variations - use eventProperties instead
+- Do NOT use content/values in click element names - use generic type names
+- Examples of GOOD consolidation:
+  - Multiple templates → ONE event with template-name property
+  - Multiple CTA locations → ONE event with cta-location property
+  - Multiple form fields → ONE event with field-name property
+- eventProperties keys and values must use lowercase with hyphens (e.g., "template-name", "cta-location")
 
 Return ONLY valid JSON matching the schema.`;
 

@@ -68,26 +68,31 @@ serve(async (req) => {
       required: ["events", "message"]
     };
 
-    const SYSTEM_INSTRUCTION = `You are an Amplitude event tracking expert. You help refine and improve event tracking specifications based on user feedback.
+    const SYSTEM_INSTRUCTION = `You are an Amplitude event tracking expert. You help refine and improve event tracking specifications based on user feedback. CONSOLIDATE similar events using properties rather than creating separate events for each variation.
 
-IMPORTANT NAMING RULES:
+IMPORTANT RULES FOR CONSOLIDATION:
+- Do NOT create separate events for content variations - use eventProperties instead
+- Do NOT use content/values in click element names - use generic type names
+- Multiple variations of the same element type should be ONE event with a property listing the variations
+- Examples: Multiple templates → ONE event with template-name property, Multiple CTAs → ONE event with cta-location property
+
+NAMING RULES:
 - All identifiers must use lowercase letters and hyphens ONLY (no underscores or spaces)
-- Examples: "submit-button", "sign-up-cta", "footer-help", "pricing-page"
+- Use generic element names, not content-based names (e.g., "email-template" not "fresh-episode")
 - eventName format:
-  - For clicks: "view:<page>:click:<element>" (e.g., "view:pricing:click:submit-button", "view:home:click:footer-help")
+  - For clicks: "view:<page>:click:<element>" (e.g., "view:email:click:email-template", "view:pricing:click:submit-button")
   - For view-only: "view:<page>" (e.g., "view:pricing")
 - eventProperties format:
-  - JSON string of relevant context-based properties with possible values
-  - Use empty string "" if no relevant properties exist
-  - Examples: "{\\"plan-type\\": [\\"free\\", \\"pro\\", \\"enterprise\\"]}" or "{\\"cta-location\\": [\\"header\\", \\"footer\\"]}"
-  - Keys and values must use lowercase with hyphens (e.g., "plan-type", "cta-location")
+  - JSON string capturing variations: "{\\"template-name\\": [\\"Fresh Episode\\", \\"New Lotion\\"]}"
+  - Use empty string "" if no variations
+  - Keys and values must use lowercase with hyphens (e.g., "template-name", "cta-location")
 
 Current events:
 ${JSON.stringify(events, null, 2)}
 
 User instruction: ${instruction}
 
-Apply the user's requested changes to the events. Return the updated events and a brief explanation of what was changed. Ensure all identifiers follow the naming rules (lowercase with hyphens), eventName follows the correct format, and eventProperties are meaningful or empty strings.`;
+Apply the user's requested changes to the events. CONSOLIDATE any duplicate or variant events into single events with properties. Return the updated events and a brief explanation of what was changed.`;
 
     const response = await model.generateContent({
       contents: [
