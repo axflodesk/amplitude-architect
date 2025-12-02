@@ -163,7 +163,7 @@ export default function App() {
     <div className="min-h-screen bg-page text-primary font-sans flex flex-col">
       {/* Header */}
       <header className="bg-transparent sticky top-0 z-50 flex-none">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between relative">
+        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-center relative">
           <button
             onClick={() => {
               setHasGenerated(false);
@@ -180,13 +180,6 @@ export default function App() {
             <div>
               <h1 className="text-2xl font-bold text-primary tracking-tight">Instrumentator</h1>
             </div>
-          </button>
-
-          <button
-            onClick={logout}
-            className="px-4 py-2 text-sm font-medium text-primary/70 hover:text-primary hover:bg-primary/5 rounded-lg transition-colors"
-          >
-            Logout
           </button>
         </div>
       </header>
