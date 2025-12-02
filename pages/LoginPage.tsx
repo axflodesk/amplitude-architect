@@ -43,7 +43,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
 
       {/* Login Form */}
       <div className="w-full max-w-md px-4">
-        <div className="bg-page border border-primary/20 rounded-lg shadow-lg p-8 backdrop-blur-sm">
+        <div className="bg-white border-2 border-primary p-8">
           {/* Icon */}
           <div className="flex justify-center mb-6">
             <div className="text-primary/70">
@@ -75,7 +75,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
                   setError('');
                 }}
                 placeholder="Enter passcode"
-                className="w-full px-4 py-3 border border-primary/20 rounded-lg bg-white/50 focus:bg-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-primary placeholder:text-primary/40 transition-all"
+                className="w-full px-4 py-3 border border-primary bg-white focus:ring-2 focus:ring-primary/20 outline-none text-primary placeholder:text-primary/40 transition-all"
                 disabled={isLoading}
                 autoFocus
               />
@@ -83,7 +83,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
 
             {/* Error Message */}
             {error && (
-              <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+              <div className="p-3 bg-red-50 border border-red-300">
                 <p className="text-sm text-red-700">{error}</p>
               </div>
             )}
