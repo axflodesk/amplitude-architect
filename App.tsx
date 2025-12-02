@@ -195,26 +195,14 @@ export default function App() {
       <main className="flex-1 max-w-7xl mx-auto px-4 py-8 w-full flex flex-col">
         {!hasGenerated ? (
           <div className="flex-1 flex flex-col items-center justify-center -mt-20">
-            <div className="w-full max-w-lg space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
-              <div className="text-center space-y-4">
-                <h2 className="text-5xl font-bold tracking-tight text-primary/85">
-                  Image recognition finds your{' '}
-                  <img
-                    src="https://cdn.prod.website-files.com/64da81538e9bdebe7ae2fa11/64ee6c441b07b9e11db3dc92_A%20mark%20circle.svg"
-                    alt="Amplitude"
-                    className="w-12 h-12 inline-block align-middle opacity-60"
-                  />
-                  {' '}events
-                </h2>
-              </div>
-              
-              <InputSection 
+            <div className="w-full max-w-lg animate-in fade-in slide-in-from-bottom-4 duration-700">
+              <InputSection
                 description={inputDescription}
                 setDescription={setInputDescription}
                 imagePreview={inputImage}
                 setImagePreview={setInputImage}
-                onGenerate={handleGenerate} 
-                isGenerating={appState === AppState.GENERATING} 
+                onGenerate={handleGenerate}
+                isGenerating={appState === AppState.GENERATING}
               />
             </div>
           </div>
