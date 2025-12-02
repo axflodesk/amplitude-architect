@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { AmplitudeEvent } from '../types';
-import { IconDownload, IconTable, IconCopy, IconCheck } from './icons';
+import { IconDownload, IconTable, IconCopy, IconCheck, IconTrash } from './icons';
 import { Button } from './Button';
 
 interface EventTableProps {
   events: AmplitudeEvent[];
   isLoading?: boolean;
+  onDeleteEvent?: (eventId: string) => void;
 }
 
-export const EventTable: React.FC<EventTableProps> = ({ events, isLoading = false }) => {
+export const EventTable: React.FC<EventTableProps> = ({ events, isLoading = false, onDeleteEvent }) => {
   const [copied, setCopied] = useState(false);
+  const [hoveredRowId, setHoveredRowId] = useState<string | null>(null);
 
   const formatEventProperties = (eventProperties: string): string => {
     if (!eventProperties || eventProperties.trim() === '') {
@@ -28,12 +30,41 @@ export const EventTable: React.FC<EventTableProps> = ({ events, isLoading = fals
     }
   };
 
+  const formatPropertyValue = (val: any): string => {
+    if (Array.isArray(val)) {
+      return val.map(v => String(v).toLowerCase().replace(/\s+/g, '-')).join(', ');
+    }
+    return String(val).toLowerCase().replace(/\s+/g, '-');
+  };
+
+  const renderEventPropertiesJSX = (eventProperties: string) => {
+    if (!eventProperties || eventProperties.trim() === '') {
+      return null;
+    }
+    try {
+      const parsed = JSON.parse(eventProperties);
+      if (Object.keys(parsed).length === 0) {
+        return null;
+      }
+      const entries = Object.entries(parsed);
+      return (
+        <div className="space-y-1">
+          {entries.map(([key, value], idx) => (
+            <div key={`${key}-${idx}`}>
+              <span className="font-bold">{key}:</span> {formatPropertyValue(value)}
+            </div>
+          ))}
+        </div>
+      );
+    } catch {
+      return eventProperties;
+    }
+  };
+
   const generateCSV = () => {
-    const headers = ["Action", "View", "Click", "Event Name", "Event Properties"];
+    const headers = ["Action", "Event Name", "Event Properties"];
     const rows = events.map(e => [
       `"${e.action.replace(/"/g, '""')}"`,
-      `"${e.view.replace(/"/g, '""')}"`,
-      `"${e.click.replace(/"/g, '""')}"`,
       `"${e.eventName.replace(/"/g, '""')}"`,
       `"${formatEventProperties(e.eventProperties).replace(/"/g, '""')}"`
     ]);
@@ -41,6 +72,37 @@ export const EventTable: React.FC<EventTableProps> = ({ events, isLoading = fals
     return [
       headers.join(','),
       ...rows.map(r => r.join(','))
+    ].join('\n');
+  };
+
+  const formatEventPropertiesForTSV = (eventProperties: string): string => {
+    if (!eventProperties || eventProperties.trim() === '') {
+      return '';
+    }
+    try {
+      const parsed = JSON.parse(eventProperties);
+      if (Object.keys(parsed).length === 0) {
+        return '';
+      }
+      return Object.entries(parsed)
+        .map(([key, value]) => `${key}: ${formatPropertyValue(value)}`)
+        .join('; ');
+    } catch {
+      return eventProperties;
+    }
+  };
+
+  const generateTSV = () => {
+    const headers = ["Action", "Event Name", "Event Properties"];
+    const rows = events.map(e => [
+      e.action,
+      e.eventName,
+      formatEventPropertiesForTSV(e.eventProperties)
+    ]);
+
+    return [
+      headers.join('\t'),
+      ...rows.map(r => r.join('\t'))
     ].join('\n');
   };
 
@@ -59,9 +121,9 @@ export const EventTable: React.FC<EventTableProps> = ({ events, isLoading = fals
 
   const copyToClipboard = async () => {
     if (events.length === 0) return;
-    const csvContent = generateCSV();
+    const tsvContent = generateTSV();
     try {
-      await navigator.clipboard.writeText(csvContent);
+      await navigator.clipboard.writeText(tsvContent);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
@@ -88,7 +150,7 @@ export const EventTable: React.FC<EventTableProps> = ({ events, isLoading = fals
         <div className="flex gap-2">
           <Button size="sm" variant="secondary" onClick={copyToClipboard}>
             {copied ? <IconCheck width={16} height={16} style={{ marginRight: '8px' }} /> : <IconCopy width={16} height={16} style={{ marginRight: '8px' }} />}
-            {copied ? "Copied!" : "Copy CSV"}
+            {copied ? "Copied!" : "Copy"}
           </Button>
           <Button size="sm" variant="secondary" onClick={downloadCSV}>
             <IconDownload width={16} height={16} style={{ marginRight: '8px' }} />
@@ -101,8 +163,6 @@ export const EventTable: React.FC<EventTableProps> = ({ events, isLoading = fals
           <thead className="bg-page text-primary sticky top-0 z-10">
             <tr>
               <th className="px-6 py-3 font-semibold border-b border-primary/10 w-1/4">Action</th>
-              <th className="px-6 py-3 font-semibold border-b border-primary/10">View</th>
-              <th className="px-6 py-3 font-semibold border-b border-primary/10">Click</th>
               <th className="px-6 py-3 font-semibold border-b border-primary/10">Event Name</th>
               <th className="px-6 py-3 font-semibold border-b border-primary/10 w-1/3">Event Properties</th>
             </tr>
@@ -112,12 +172,6 @@ export const EventTable: React.FC<EventTableProps> = ({ events, isLoading = fals
               // Skeleton loader rows
               Array.from({ length: 5 }).map((_, idx) => (
                 <tr key={`skeleton-${idx}`} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4">
-                    <div className="h-4 bg-gray-200 w-24 animate-pulse"></div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="h-4 bg-gray-200 w-20 animate-pulse"></div>
-                  </td>
                   <td className="px-6 py-4">
                     <div className="h-4 bg-gray-200 w-24 animate-pulse"></div>
                   </td>
@@ -135,12 +189,26 @@ export const EventTable: React.FC<EventTableProps> = ({ events, isLoading = fals
             ) : (
               // Actual event rows
               events.map((event, idx) => (
-                <tr key={event.id || idx} className="hover:bg-gray-50 transition-colors">
+                <tr
+                  key={event.id || idx}
+                  className="hover:bg-gray-50 transition-colors"
+                  onMouseEnter={() => setHoveredRowId(event.id || idx.toString())}
+                  onMouseLeave={() => setHoveredRowId(null)}
+                >
                   <td className="px-6 py-4 text-primary font-medium whitespace-normal">{event.action || ''}</td>
-                  <td className="px-6 py-4 text-primary/80 font-mono text-xs">{event.view || ''}</td>
-                  <td className="px-6 py-4 text-primary/80 font-mono text-xs">{event.click || ''}</td>
                   <td className="px-6 py-4 text-primary font-mono text-xs font-bold">{event.eventName || ''}</td>
-                  <td className="px-6 py-4 text-primary/80 whitespace-pre-wrap text-xs">{formatEventProperties(event.eventProperties)}</td>
+                  <td className="relative px-6 py-4 text-primary/80 font-mono text-xs">
+                    {renderEventPropertiesJSX(event.eventProperties)}
+                    {hoveredRowId === (event.id || idx.toString()) && (
+                      <button
+                        onClick={() => onDeleteEvent?.(event.id || idx.toString())}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-primary hover:opacity-70 transition-opacity"
+                        title="Delete event"
+                      >
+                        <IconTrash width={18} height={18} />
+                      </button>
+                    )}
+                  </td>
                 </tr>
               ))
             )}

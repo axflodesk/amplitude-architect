@@ -139,3 +139,10 @@ export const IconStop: React.FC<IconProps> = ({ width = 24, height = 24, classNa
     <path d="M6 2h2v2H6V2Zm10 2h-2v2h-2V4H8v2H6v3H4V7H2v2h2v2h2v2H2v2h4v2H4v2H2v2h2v-2h2v3h8v-2H8V8h8v6h2v-3h2V9h2V7h-2v2h-2V6h-2V4Zm0 0V2h2v2h-2Zm-6 7h4v2h-4v-2Zm4 4h-4v2h4v-2Zm8 1h-6v6h6v-6Z"/>
   </svg>
 );
+
+// Trash/Delete icon
+export const IconTrash: React.FC<IconProps> = ({ width = 24, height = 24, className, style }) => (
+  <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={width} height={height} className={className} style={style}>
+    <path d="M16 2v4h6v2h-2v14H4V8H2V6h6V2h8zm-2 2h-4v2h4V4zm0 4H6v12h12V8h-4zm-5 2h2v8H9v-8zm6 0h-2v8h2v-8z" fill="currentColor"/>
+  </svg>
+);

@@ -214,7 +214,13 @@ export default function App() {
             {/* Right Column: Table */}
             <div className="col-span-12 lg:col-span-8 flex flex-col h-full overflow-hidden">
                <div className="flex-1 min-h-0">
-                  <EventTable events={events} isLoading={appState === AppState.GENERATING} />
+                  <EventTable
+                    events={events}
+                    isLoading={appState === AppState.GENERATING}
+                    onDeleteEvent={(eventId) => {
+                      setEvents(events.filter(e => (e.id || events.indexOf(e).toString()) !== eventId));
+                    }}
+                  />
                </div>
             </div>
           </div>

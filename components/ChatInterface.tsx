@@ -116,31 +116,28 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ messages, onSendMe
         )}
         
         {messages.map((msg) => (
-          <div
-            key={msg.id}
-            className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
-          >
-            <div className="flex-shrink-0 text-primary">
+          <div key={msg.id} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
+            <div className="flex-shrink-0 text-primary pt-1">
               {msg.role === 'user' ? <IconUser width={20} height={20} /> : <IconRobot width={20} height={20} />}
             </div>
-            <div className={`
-              max-w-[85%] shadow-sm
-              ${msg.role === 'user'
-                ? 'bg-primary text-white'
-                : 'bg-page border border-transparent text-primary'}
-            `}>
-              {msg.imageData && (
-                <div className="mb-3">
-                  <img
-                    src={msg.imageData}
-                    alt="Feature snapshot"
-                    className="max-w-full max-h-64 object-contain cursor-zoom-in"
-                    onClick={() => { setSelectedImage(msg.imageData); setIsModalOpen(true); }}
-                  />
-                </div>
+            <div className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} gap-2`}>
+              {msg.imageData && msg.role === 'user' && (
+                <img
+                  src={msg.imageData}
+                  alt="Feature snapshot"
+                  className="max-w-full max-h-64 object-contain cursor-zoom-in"
+                  onClick={() => { setSelectedImage(msg.imageData); setIsModalOpen(true); }}
+                />
               )}
-              <div className="px-4 py-2.5 text-sm">
-                {msg.text}
+              <div className={`
+                shadow-sm
+                ${msg.role === 'user'
+                  ? 'bg-primary text-white'
+                  : 'bg-page border border-transparent text-primary'}
+              `}>
+                <div className="px-4 py-2.5 text-sm">
+                  {msg.text}
+                </div>
               </div>
             </div>
           </div>
