@@ -75,7 +75,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
                   setError('');
                 }}
                 placeholder="Enter passcode"
-                className="w-full px-4 py-3 border border-primary bg-white focus:ring-2 focus:ring-primary/20 outline-none text-primary placeholder:text-primary/40 transition-all"
+                className="w-full px-4 py-2 border border-primary bg-white focus:ring-2 focus:ring-primary/20 outline-none text-primary placeholder:text-primary/40 transition-all"
                 disabled={isLoading}
                 autoFocus
               />
@@ -94,7 +94,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
               disabled={!passcode.trim() || isLoading}
               className="w-full mt-6"
             >
-              {isLoading ? 'Verifying...' : 'Access App'}
+              {isLoading ? 'Verifying...' : 'Continue'}
             </Button>
           </form>
 
