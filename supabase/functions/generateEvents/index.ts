@@ -63,7 +63,7 @@ serve(async (req) => {
     console.log("Creating Gemini client");
     const client = new GoogleGenerativeAI(apiKey);
     console.log("Getting model");
-    const model = client.getGenerativeModel({ model: "gemini-2.0-flash" });
+    const model = client.getGenerativeModel({ model: "gemini-3-pro-preview" });
     console.log("Model obtained successfully");
 
     const EVENT_SCHEMA = {

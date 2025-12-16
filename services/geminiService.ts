@@ -19,12 +19,26 @@ export const generateEventsFromInput = async (
     if (error) {
       console.error("Function error:", error);
       console.error("Full error object:", JSON.stringify(error, null, 2));
-      throw new Error(error.message || 'Failed to generate events');
+
+      // Try to extract more detailed error information
+      const errorDetails = data?.error || error.message || 'Failed to generate events';
+      console.error("Error details:", errorDetails);
+
+      throw new Error(errorDetails);
     }
 
-    if (!data || !data.events) {
-      console.error("Invalid response:", data);
-      throw new Error('Invalid response from generateEvents function');
+    if (!data) {
+      console.error("No data received from function");
+      throw new Error('No response data from generateEvents function');
+    }
+
+    if (!data.events) {
+      console.error("Invalid response structure:", data);
+      // Check if there's an error field in the data
+      if (data.error) {
+        throw new Error(`Function error: ${data.error}`);
+      }
+      throw new Error('Invalid response from generateEvents function - missing events');
     }
 
     console.log("Successfully generated", data.events.length, "events");
